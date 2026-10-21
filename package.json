@@ -243,7 +243,7 @@
     "mdast-util-to-markdown": "2.1.2",
     "mdast-util-to-string": "^4.0.0",
     "micromark-extension-gfm": "^3.0.0",
-    "next": "^16.3.6",
+    "next": "^16.3.8",
     "ora": "^9.3.0",
     "parse5": "8.0.1",
     "quick-lru": "7.0.1",
@@ -363,7 +363,7 @@
     "cheerio": {
       "undici": "^7.28.0"
     },
-    "markdown-it": "^14.3.2"
+    "markdown-it": "^14.3.3"
   },
   "optionalDependencies": {
     "esm": "^3.2.25"
