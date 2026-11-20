@@ -1,5 +1,4 @@
-
-name: Deploy Next.js site to Pages
+name: Deploy project dashboard to GitHub Pages
 
 on:
   push:
@@ -19,51 +18,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout mã nguồn
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Kiểm tra cấu hình Next.js và tự động sửa đuôi file
-        run: |
-          if [ -f "next.config.js" ]; then
-            echo "Phát hiện file next.config.js, tự động chuyển đổi sang .cjs để sửa lỗi ES Module Scope..."
-            mv next.config.js next.config.cjs
-          fi
-
-      - name: Thiết lập môi trường Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: ${{ hashFiles('package-lock.json') != '' && 'npm' || '' }}
-
-      - name: Khởi tạo cấu hình GitHub Pages tĩnh
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Cài đặt các gói phụ thuộc (Dependencies)
+      - name: Prepare static dashboard
         run: |
-          if [ -f "package-lock.json" ]; then
-            npm ci
-          else
-            npm install
-          fi
+          test -s index.html
+          mkdir -p _site
+          cp index.html _site/index.html
+          touch _site/.nojekyll
+          test -s _site/index.html
 
-      - name: Biên dịch dự án Next.js
-        run: npx next build
-
-      - name: Xác định thư mục xuất bản (out hoặc .next)
-        id: determine-path
-        run: |
-          if [ -d "out" ]; then
-            echo "dir=./out" >> $GITHUB_OUTPUT
-          elif [ -d ".next" ]; then
-            echo "dir=./.next" >> $GITHUB_OUTPUT
-          else
-            echo "dir=./" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Tải tệp tin tĩnh lên bộ nhớ đệm GitHub
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ steps.determine-path.outputs.dir }}
+          path: _site
 
   deploy:
     environment:
@@ -72,6 +44,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Triển khai trực tiếp lên GitHub Pages
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
