@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#08090c">
+  <meta name="description" content="Project overview and navigation dashboard for Sandboxcode Docs, an open-source documentation repository based on GitHub Docs.">
+  <title>Sandboxcode Docs — Project Overview</title>
+  <style>
+    :root{color-scheme:dark;--bg:#08090c;--panel:#101216;--panel2:#0c0e12;--line:#292d35;--muted:#9299a6;--fg:#f3f5f8;--blue:#78a9ff;--green:#78dba9;--mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 75% -15%,#172238 0,transparent 38%),var(--bg);color:var(--fg);font:15px/1.6 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    a{color:inherit;text-decoration:none}a:hover{color:var(--blue)}.wrap{max-width:1160px;margin:auto;padding:0 24px}.top{height:66px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.brand{font:600 14px var(--mono);letter-spacing:-.04em}.brand span{color:var(--blue)}.nav{display:flex;gap:22px;color:var(--muted);font-size:13px}.hero{padding:76px 0 54px}.eyebrow{font:12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--green)}h1{font-size:clamp(38px,7vw,70px);line-height:1.02;letter-spacing:-.065em;margin:18px 0;max-width:800px}.lead{max-width:720px;color:#aeb5c1;font-size:17px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}.btn{border:1px solid #454b57;padding:10px 15px;font:12px var(--mono);display:inline-flex;gap:9px;align-items:center}.btn.primary{background:#f3f5f8;color:#090a0d;border-color:#f3f5f8}.btn:hover{border-color:var(--blue);color:var(--blue)}.btn.primary:hover{color:#090a0d;background:#d9e6ff}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);margin:12px 0 56px}.stat{padding:18px 20px;border-right:1px solid var(--line)}.stat:last-child{border:0}.stat strong{display:block;font:600 20px var(--mono)}.stat small{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+    section{padding:0 0 56px}.section-head{display:flex;justify-content:space-between;align-items:end;border-bottom:1px solid var(--line);padding-bottom:13px;margin-bottom:20px}.section-head h2{font-size:19px;letter-spacing:-.03em;margin:0}.section-head span{font:11px var(--mono);color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:linear-gradient(145deg,var(--panel),var(--panel2));border:1px solid var(--line);padding:20px;min-height:156px;display:flex;flex-direction:column}.card:hover{border-color:#58677f}.card .tag{font:10px var(--mono);color:var(--green);text-transform:uppercase;letter-spacing:.1em}.card h3{font-size:16px;margin:12px 0 5px}.card p{color:var(--muted);font-size:13px;margin:0 0 16px}.card .arrow{margin-top:auto;color:var(--blue);font:11px var(--mono)}.split{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}.panel{border:1px solid var(--line);background:var(--panel2);padding:22px}.panel h3{font-size:15px;margin:0 0 14px}.tree{font:12px/2 var(--mono);color:#b9c1ce;white-space:pre-wrap}.tree b{color:var(--blue);font-weight:500}.rowlink{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid #20242b;font-size:13px}.rowlink:last-child{border:0}.rowlink span:last-child{color:var(--muted);font:11px var(--mono)}.notice{border-left:2px solid var(--blue);padding:13px 16px;background:#101722;color:#b7c3d4;font-size:13px}.footer{border-top:1px solid var(--line);padding:25px 0 38px;color:var(--muted);font:11px var(--mono);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    @media(max-width:760px){.nav{gap:12px}.nav a:nth-child(2){display:none}.hero{padding-top:54px}.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}.grid{grid-template-columns:1fr}.split{grid-template-columns:1fr}.wrap{padding:0 17px}.section-head{align-items:start;gap:12px;flex-direction:column}}
+  </style>
+</head>
+<body>
+  <header class="wrap top">
+    <a class="brand" href="#top">SANDBOXCODE<span> / DOCS</span></a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#overview">Overview</a><a href="#structure">Structure</a><a href="#resources">Resources</a>
+      <a href="https://github.com/zskbot/sandboxcode-docs">GitHub ↗</a>
+    </nav>
+  </header>
+  <main id="top" class="wrap">
+    <section class="hero" id="overview">
+      <div class="eyebrow">Open-source documentation · Project dashboard</div>
+      <h1>Documentation,<br>built in the open.</h1>
+      <p class="lead">A project overview for Sandboxcode Docs — a public fork of GitHub's documentation platform. Explore the documentation content, development tooling, contribution guidance, and project activity from one place.</p>
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/zskbot/sandboxcode-docs">↗ OPEN REPOSITORY</a>
+        <a class="btn" href="https://github.com/zskbot/sandboxcode-docs/tree/main">BROWSE SOURCE</a>
+        <a class="btn" href="https://github.com/zskbot/sandboxcode-docs/issues">VIEW ISSUES</a>
+      </div>
+    </section>
+    <div class="stats" aria-label="Repository facts">
+      <div class="stat"><strong>PUBLIC</strong><small>Visibility</small></div>
+      <div class="stat"><strong>main</strong><small>Default branch</small></div>
+      <div class="stat"><strong>TypeScript</strong><small>Primary language</small></div>
+      <div class="stat"><strong>MIT + CC BY 4.0</strong><small>Declared licensing</small></div>
+    </div>
+
+    <section id="modules">
+      <div class="section-head"><h2>Explore the project</h2><span>01 / MODULES</span></div>
+      <div class="grid">
+        <a class="card" href="https://github.com/zskbot/sandboxcode-docs/tree/main/content"><span class="tag">Documentation</span><h3>Content library</h3><p>Browse documentation pages, guides, tutorials, and product references.</p><span class="arrow">OPEN CONTENT ↗</span></a>
+        <a class="card" href="https://github.com/zskbot/sandboxcode-docs/tree/main/data"><span class="tag">Structured data</span><h3>Data & reusable content</h3><p>Explore shared data, reusable snippets, and supporting documentation resources.</p><span class="arrow">OPEN DATA ↗</span></a>
+        <a class="card" href="https://github.com/zskbot/sandboxcode-docs/tree/main/src"><span class="tag">Application</span><h3>Platform source</h3><p>Inspect the TypeScript application, rendering pipeline, and internal tooling.</p><span class="arrow">OPEN SOURCE ↗</span></a>
+        <a class="card" href="https://github.com/zskbot/sandboxcode-docs/tree/main/.github"><span class="tag">Automation</span><h3>GitHub workflows</h3><p>Review repository automation, contribution templates, and CI configuration.</p><span class="arrow">OPEN WORKFLOWS ↗</span></a>
+        <a class="card" href="https://github.com/zskbot/sandboxcode-docs/blob/main/package.json"><span class="tag">Developer tooling</span><h3>Scripts & commands</h3><p>Find development, build, lint, test, and content-maintenance commands.</p><span class="arrow">VIEW PACKAGE.JSON ↗</span></a>
+        <a class="card" href="https://github.com/zskbot/sandboxcode-docs/blob/main/README.md"><span class="tag">Getting started</span><h3>Project README</h3><p>Read the repository introduction, contributor paths, sync notes, and license summary.</p><span class="arrow">READ README ↗</span></a>
+      </div>
+    </section>
+
+    <section id="structure">
+      <div class="section-head"><h2>Architecture at a glance</h2><span>02 / STRUCTURE</span></div>
+      <div class="split">
+        <div class="panel"><h3>Repository map</h3><div class="tree"><b>sandboxcode-docs/</b>
+├── content/       Documentation pages
+├── data/          Shared content data
+├── src/           TypeScript application & tooling
+├── .github/       Workflows and contribution config
+├── package.json   Scripts and dependencies
+├── README.md      Project entry point
+└── index.html     This overview dashboard</div></div>
+        <div class="panel"><h3>Technology & workflow</h3>
+          <div class="rowlink"><span>Application language</span><span>TypeScript</span></div>
+          <div class="rowlink"><span>Web framework</span><span>Next.js</span></div>
+          <div class="rowlink"><span>Build command</span><span>npm run build</span></div>
+          <div class="rowlink"><span>Test runner</span><span>Vitest</span></div>
+          <div class="rowlink"><span>Static analysis</span><span>ESLint / TSC</span></div>
+          <div class="rowlink"><span>Package manager</span><span>npm</span></div>
+        </div>
+      </div>
+      <p class="notice">Repository context: this project identifies itself as Sandboxcode Docs in its README and as a fork of the public GitHub Docs repository in GitHub metadata. Check the README and upstream project before making infrastructure or application-level changes.</p>
+    </section>
+
+    <section id="resources">
+      <div class="section-head"><h2>Project resources</h2><span>03 / QUICK ACCESS</span></div>
+      <div class="grid">
+        <a class="card" href="https://github.com/zskbot/sandboxcode-docs/pulls"><span class="tag">Collaboration</span><h3>Pull requests</h3><p>Review proposed changes and contribute through the PR workflow.</p><span class="arrow">OPEN PULL REQUESTS ↗</span></a>
+        <a class="card" href="https://github.com/zskbot/sandboxcode-docs/actions"><span class="tag">Delivery</span><h3>Actions & CI</h3><p>Inspect workflow runs and automated checks.</p><span class="arrow">OPEN ACTIONS ↗</span></a>
+        <a class="card" href="https://github.com/zskbot/sandboxcode-docs/branches"><span class="tag">Source control</span><h3>Branches</h3><p>Browse active development branches and commit history.</p><span class="arrow">BROWSE BRANCHES ↗</span></a>
+        <a class="card" href="https://github.com/github/docs"><span class="tag">Upstream</span><h3>GitHub Docs</h3><p>Compare this fork with the upstream documentation project.</p><span class="arrow">OPEN UPSTREAM ↗</span></a>
+        <a class="card" href="https://docs.github.com/en/contributing"><span class="tag">Guidelines</span><h3>Contributing guide</h3><p>Learn how to propose documentation improvements.</p><span class="arrow">READ GUIDELINES ↗</span></a>
+        <a class="card" href="https://github.com/zskbot/sandboxcode-docs/blob/main/LICENSE"><span class="tag">Legal</span><h3>License</h3><p>Review the documentation and content licensing terms.</p><span class="arrow">VIEW LICENSE ↗</span></a>
+      </div>
+    </section>
+  </main>
+  <footer class="wrap footer"><span>© SANDBOXCODE DOCS · PROJECT OVERVIEW</span><span>BUILT WITH HTML + CSS · NO BUILD STEP</span></footer>
+</body>
+</html>
