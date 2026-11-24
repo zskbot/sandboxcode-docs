@@ -722,6 +722,8 @@ Settings are applied in this order (later overrides earlier):
 
 MDM managed settings load at startup and merge with user settings as a policy baseline. For most keys, user settings can override that baseline. For `permissions.disableBypassPermissionsMode`, an MDM value of `"disable"` always wins. Managed `sandbox` settings are another exception. Instead of being overridable, each managed `sandbox` value sets a floor that you cannot relax. If your own setting is more permissive, the managed value wins. The `sandbox.failIfUnavailable` setting can only be set by an administrator. For more information, see [MDM managed settings](#mdm-managed-settings).
 
+Managed `strictPluginOnlyCustomization` restrictions also cannot be relaxed by user, repository, or local settings.
+
 | Scope | Location | Purpose |
 |-------|----------|---------|
 | User | `~/.copilot/settings.json` | Global defaults for all repositories. Use the `COPILOT_HOME` environment variable to specify an alternative path. |
@@ -735,6 +737,8 @@ Repository defaults are optional: set `enabledPlugins` entries to `false` in rep
 ### User settings (`~/.copilot/settings.json`)
 
 These settings apply across all your sessions and repositories. You can use the `/settings` slash command to run an interactive dialog, or use specific slash commands to update individual values, or edit this file directly.
+
+Only settings with a public description can be changed with `/settings KEY VALUE`. Array and record settings, and some security-sensitive keys such as `statusLine.command`, must be edited through the dialog or directly in `settings.json`.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -752,7 +756,7 @@ These settings apply across all your sessions and repositories. You can use the 
 | `compactPaste` | `boolean` | `true` | Collapse large pastes (more than 10 lines) into compact tokens. In shell mode or after a leading slash command, pastes are inserted in full. |
 | `companyAnnouncements` | `string[]` | `[]` | Custom messages shown randomly on startup. One message is randomly selected each time the CLI starts. Useful for team announcements or reminders. |
 | `connectors` | `boolean` | `true` | Enable {% data variables.product.prodname_copilot_short %} Connectors when available. Set to `false` to disable. |
-| `continueOnAutoMode` | `boolean` | `false` | Automatically switch to auto mode when rate-limited. When `true`, eligible rate limit errors trigger an automatic switch to auto mode and retry. Does not apply to global rate limits or BYOK providers. |
+| `continueOnAutoMode` | `boolean` | `false` | Automatically switch to auto mode and retry when a per-model, weekly, or integration rate limit is reached. Also applies to {% data variables.product.prodname_copilot_short %} rate limit errors without a specific code. Does not apply to global rate limits or BYOK providers. |
 | `copyOnSelect` | `boolean` | `true` (macOS), `false` (other) | Automatically copy mouse-selected text to the system clipboard. |
 | `customAgents.defaultLocalOnly` | `boolean` | `false` | Only use local custom agents (no remote organization or enterprise agents). |
 | `defaultMode` | `"interactive"` \| `"plan"` \| `"autopilot"` | `"interactive"` | The agent mode that new interactive sessions start in. The `--mode`, `--autopilot`, and `--plan` options take precedence. Resumed sessions keep their own mode, and the setting is ignored for `-p`/`--prompt`, `--server`, and `--acp` runs. |
@@ -862,6 +866,40 @@ Sandbox settings are user-level or enterprise-managed. They are not repository-o
 
 Sandboxing is powered by [Microsoft eXecution Container (MXC)](https://github.com/microsoft/mxc?utm_source=cli-config-directory-reference-article-microsoft-mxc&utm_medium=docs&utm_campaign=universe-2026), which provides platform-specific containment backends. {% data variables.copilot.copilot_cli_short %} uses Seatbelt on macOS, Bubblewrap on Linux, and ProcessContainer on Windows.
 
+#### Proxy client certificates
+
+When an `https://` proxy configured through `proxyUrl`, `HTTPS_PROXY`, or `HTTP_PROXY` requests a client certificate, the CLI automatically selects an operating-system-managed identity for mutual TLS (mTLS). No certificate path, private key, or passphrase setting is required, and private keys remain in the platform store.
+
+| Platform | Identity source |
+|----------|-----------------|
+| Windows | Current user's `MY` certificate store |
+| macOS | User Keychain search list, including a preferred identity for the proxy host |
+| Linux (glibc) | Chromium-compatible NSS database and its configured PKCS#11 modules |
+| Linux (musl) and other platforms | Unsupported. Ordinary proxy behavior is unchanged. |
+
+Client identity selection applies only to `https://` proxies, not direct requests, `NO_PROXY` matches, or `http://` proxies. The CLI reads the platform store on every request, so certificate rotation or smart-card insertion does not require a restart.
+
+#### PowerShell startup flags
+
+The `powershellFlags` setting controls flags passed before the runtime's own flags. Removing `-NoProfile`, for example by setting `["-NoLogo"]`, loads your PowerShell profile, including its aliases, modules, and functions. This can slow startup, produce unexpected output, or change shell behavior.
+
+An empty array loads the profile and shows the PowerShell version banner. You can also add `-Sta` for single-threaded apartment mode for COM interoperability, or `-ExecutionPolicy`, followed by `Bypass`, to change the execution policy.
+
+Do not include flags that conflict with the runtime's command execution, lifecycle, or output handling:
+
+| Flags | Conflict |
+|-------|----------|
+| `-Command`, `-c`, `-CommandWithArgs`, `-cwa` | Replace or conflict with the runtime's command |
+| `-File`, `-f` | Execute a script file instead of the runtime's command |
+| `-EncodedCommand`, `-e` | Replace the command source with Base64-encoded input |
+| `-NoExit`, `-noe` | Prevent runtime-managed shutdown |
+| `-NonInteractive`, `-noni` | Suppress runtime-managed prompts |
+| `-InputFormat`, `-OutputFormat` | Change serialization and break text-based output parsing |
+| `-ServerMode`, `-SSHServerMode` | Start a remoting endpoint instead of a shell |
+| `-Help`, `-?`, `-Version` | Print information and exit instead of running commands |
+
+The runtime uses `-NoExit -Command` for interactive sessions and `-Command` for one-shot execution.
+
 ### Repository settings (`.github/copilot/settings.json`)
 
 Repository settings apply to everyone who works in the repository. They are committed to the repository and shared with collaborators.
@@ -930,7 +968,9 @@ IT administrators can push baseline policy using Mobile Device Management (MDM) 
 
 Managed settings apply uniformly across every session-hosting mode—interactive, `-p`, `--acp`, `--ahp-host`, and `--server`—so enterprise MCP, permission, and plugin policy can't be bypassed by starting a session through a different entry point.
 
-{% data variables.copilot.copilot_cli_short %} also loads server-managed settings at startup, in addition to MDM. Device-managed (MDM) and server-managed settings are resolved **per key**: MDM's value wins for any key it sets, and the server's value fills in keys MDM leaves unset. This lets an organization set some policy via MDM (for example, `permissions`) while still receiving other managed defaults (for example, `model`) from the server.
+{% data variables.copilot.copilot_cli_short %} also loads server-managed settings at startup, in addition to MDM. Except for keys with restrictive composition rules, MDM and server-managed settings are resolved **per key**: MDM's value wins for any key it sets, and the server's value fills in keys MDM leaves unset. This lets an organization set some policy via MDM while still receiving other managed defaults, such as `model`, from the server.
+
+For `strictPluginOnlyCustomization`, restrictions are combined across native MDM, administrator-deployed `managed-settings.json` files, server-managed settings, and policy-helper settings. A category restricted by any source stays restricted. Setting the key to `false` or a narrower array in another source cannot remove that restriction.
 
 Long-running sessions re-fetch and re-apply managed settings hourly, so policy changes—for example, an organization enabling `permissions.disableBypassPermissionsMode`—take effect without restarting the session.
 
@@ -989,6 +1029,8 @@ Only the following keys are supported in MDM managed settings.
 | `sandbox.sandboxLspServers` | Boolean, defaults to `true`. When sandboxing is enabled, language servers start under the session's sandbox policy. Set to `false` to run language servers outside the sandbox, subject to the managed sandbox policy floor. |
 | `shellShortcut` | Force-enable or force-disable the `$` interactive shell shortcut for all users. A managed value always overrides the user's own `shellShortcut` setting. |
 | `strictKnownMarketplaces` | Restrict plugins to an allowlist of known marketplaces (a JSON array of marketplace specs). The allowlist also governs built-in marketplaces once set—an empty array (`[]`) hides and blocks every marketplace, including built-ins, not just user- or repository-added ones. |
+| `strictPluginOnlyCustomization` | Require selected customization categories to come from eligible plugins or managed settings. Restrictions combine across managed sources and cannot be relaxed by user or repository settings. See [`strictPluginOnlyCustomization`](/copilot/reference/enterprise-administrators/enterprise-managed-settings#strictpluginonlycustomization). |
+| `allowManagedHooksOnly` | Restrict hook sources to enterprise-managed hooks and hooks from plugins required by managed policy. For hook-specific restrictions, see [AUTOTITLE](/copilot/reference/hooks-reference#managed-hook-restrictions). |
 | `telemetry` | Push baseline OpenTelemetry export configuration: `enabled`, `endpoint`, `protocol`, `headers`, `resourceAttributes`, `captureContent`, `lockCaptureContent`, `serviceName`, and `headersProvider`. See [AUTOTITLE](/copilot/reference/enterprise-administrators/opentelemetry-reference). |
 
 > [!NOTE]
